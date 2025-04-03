@@ -1,6 +1,7 @@
 Create a text based UI around the abstract concepts of widgets and layouts.
 
 Example Code:
+```
   h_layout = TableLayout()
   h_layout.add_coloumn(Widget(list("abcdefgh"), padding=2), "Letters")
   h_layout.add_coloumn(Widget(["asdf", 'were', 'fizz', 'buzz', 'bang', '23432', 'vxXxv'], alignment=Alignment.CENTER, padding=8), "Words")
@@ -13,7 +14,7 @@ Example Code:
   v_layout.add(Widget(list(["Example Footer"]), alignment=Alignment.CENTER, padding=2))
 
   v_layout.render()
-
+```
 ```
 ┌────────────────────────────────────────────┐
 │              Example Display               │
