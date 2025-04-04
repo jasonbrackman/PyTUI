@@ -2,6 +2,11 @@ from enum import Enum, auto
 from itertools import zip_longest
 from typing import TypeVar, Generic, Optional, Union, Iterator
 
+from constants import (
+    UPPER_CORNER_LEFT, HLINE, UPPER_CORNER_RIGHT, VLINE, JUNCTION_LEFT, LOWER_CORNER_RIGHT,
+    JUNCTION_RIGHT, LOWER_CORNER_LEFT,
+)
+
 T = TypeVar('T')
 
 
@@ -18,7 +23,6 @@ class Widget(Generic[T]):
         self._alignment = alignment
         self._padding = padding
         self._width: int = 0
-
 
         self._items: list[T] = []
         if items:
@@ -70,7 +74,8 @@ class LayoutImpl:
         if alignment == Alignment.CENTER:
             return '^'
 
-    def collect_coloumn_data(self) -> tuple[Iterator[list[T]], list[int], list[Alignment], list[int]]:
+    def collect_coloumn_data(self) -> tuple[
+        Iterator[list[T]], list[int], list[Alignment], list[int]]:
         content = (w.items() for w in self._items)
         widths = [w.width() for w in self._items]
         aligns = [w.alignment() for w in self._items]
@@ -81,7 +86,7 @@ class LayoutImpl:
     def collect_rows(self) -> list[str]:
         content, widths, aligns, pads = self.collect_coloumn_data()
         rows = []
-        _fill = "│"
+        _fill = VLINE
         for row in zip_longest(*content, fillvalue=''):
             s = self._stylized_row(aligns, pads, widths, row, fill=_fill)
             rows.append(f'{s:{self._alignment_as_str(self._alignment)}{self._padding + len(s)}}')
@@ -103,17 +108,17 @@ class LayoutImpl:
                 s = f"{item:{align}{width + padd}}"
                 formatted.append(s)
 
-        s = '│'.join(formatted)
+        s = VLINE.join(formatted)
         return f"{s}"
 
     def _stylized_row(self, aligns: list[Alignment], pads: list[int], widths: list[int],
-                      row: list[str], fill: str = "│") -> str:
+                      row: list[str], fill: str = VLINE) -> str:
         s = f'{fill}'.join(
             [f"{item:{self._alignment_as_str(align)}{width + pad}}"
              for align, pad, width, item in zip(aligns, pads, widths, row)]
         )
 
-        return f"{s}"
+        return s
 
 
 class TableLayout(LayoutImpl):
@@ -122,14 +127,14 @@ class TableLayout(LayoutImpl):
         self._headers: list[T] = []
         self.display_headers = True
 
-    def add_coloumn(self, widget: Widget, header:T) -> None:
+    def add_coloumn(self, widget: Widget, header: T) -> None:
         self.add(widget)
         self._headers.append(header)
 
+    def collect_coloumn_data(self) -> tuple[
+        Iterator[list[T]], list[int], list[Alignment], list[int]]:
 
-    def collect_coloumn_data(self) -> tuple[Iterator[list[T]], list[int], list[Alignment], list[int]]:
-
-        content = [w.items() for w in self._items]
+        content = [w.items()[::] for w in self._items]
         widths = [w.width() for w in self._items]
         aligns = [w.alignment() for w in self._items]
         pads = [w.padding() for w in self._items]
@@ -142,7 +147,7 @@ class TableLayout(LayoutImpl):
         return content, widths, aligns, pads
 
 
-class VLayout(LayoutImpl):
+class Window(LayoutImpl):
     def render(self, fill: str = '') -> None:
         count = 0
         collection = {}
@@ -158,7 +163,7 @@ class VLayout(LayoutImpl):
                     collection[count] = rows[1:]
                 else:
                     collection[count] = rows
-            if isinstance(item, VLayout):
+            if isinstance(item, Window):
                 rows = item.collect_rows()
                 max_width = max(len(rows[0]), max_width)
                 collection[count] = rows
@@ -169,29 +174,10 @@ class VLayout(LayoutImpl):
             count += 1
         # get longest row
 
-        print('┌' + ('─' * max_width) + '┐')
+        print(UPPER_CORNER_LEFT + (HLINE * max_width) + UPPER_CORNER_RIGHT)
         for k, rows in collection.items():
             for row in rows:
-                print(f"│{row:^{max_width}}│")
-            if k < len(collection)-1:
-                print('├' + ('─' * max_width) + '┤')
-        print('└' + ('─' * max_width) + '┘')
-
-
-def main():
-    h_layout = TableLayout()
-    h_layout.add_coloumn(Widget(list("abcdefgh"), padding=2), "Letters")
-    h_layout.add_coloumn(Widget(["asdf", 'were', 'fizz', 'buzz', 'bang', '23432', 'vxXxv'], alignment=Alignment.CENTER, padding=8), "Words")
-    h_layout.add_coloumn(Widget(list("ABCDEFGHIJK"), padding=2), "Caps")
-    h_layout.add_coloumn(Widget(["Super", "Cali", "Fragilistic"], padding=2), "Magic")
-
-    v_layout = VLayout()
-    v_layout.add(Widget(list(["Example Display"]), alignment=Alignment.CENTER, padding=2))
-    v_layout.add(h_layout)
-    v_layout.add(Widget(list(["Example Footer"]), alignment=Alignment.CENTER, padding=2))
-
-    v_layout.render()
-
-
-if __name__ == '__main__':
-    main()
+                print(f"{VLINE}{row:^{max_width}}{VLINE}")
+            if k < len(collection) - 1:
+                print(f"{JUNCTION_RIGHT}{HLINE * max_width}{JUNCTION_LEFT}")
+        print(f"{LOWER_CORNER_LEFT}{HLINE * max_width}{LOWER_CORNER_RIGHT}")
