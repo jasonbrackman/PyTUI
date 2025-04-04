@@ -31,9 +31,9 @@ def _main():
     letters = Widget(list("abcdefghijklmno"), padding=2)
     spinner = Widget(list("    "), alignment=Alignment.CENTER, padding=2)
     table.add_coloumn(spinner, '##')
-    table.add_coloumn(letters, "Letters")
     table.add_coloumn(Widget(["asdf", 'were', 'fizz', 'buzz', 'bang', '23432', 'vxXxv'], alignment=Alignment.CENTER, padding=8), "Words")
     table.add_coloumn(Widget(list("ABCDEFGHIJK"), padding=2), "Caps")
+    table.add_coloumn(letters, "Letters")
     table.add_coloumn(Widget(["Super", "Cali", "Fragilistic"], alignment=Alignment.RIGHT, padding=2), "Magic")
 
     window = Window()
@@ -51,7 +51,7 @@ def _main():
         letters._items.pop(0)
         letters._items.extend(items)
         window.render()
-        time.sleep(0.1)
+        time.sleep(0.2)
 
 if __name__ == '__main__':
     _main()
