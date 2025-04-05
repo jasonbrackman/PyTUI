@@ -1,8 +1,11 @@
 import os
 import time
-from random import choices
+from random import choice
 
-from elements import TableLayout, Widget, Alignment, Window
+from src.elements import TableLayout, Window
+from src.widget import Widget
+from src.alignment import Alignment
+
 
 def beats():
     thumpers = [
@@ -31,7 +34,7 @@ def _main():
     letters = Widget(list("abcdefghijklmno"), padding=2)
     spinner = Widget(list("    "), alignment=Alignment.CENTER, padding=2)
     table.add_coloumn(spinner, '##')
-    table.add_coloumn(Widget(["asdf", 'were', 'fizz', 'buzz', 'bang', '23432', 'vxXxv'], alignment=Alignment.CENTER, padding=8), "Words")
+    table.add_coloumn(Widget(["asdf", 'were', 'fizz', 'buzz', 'bang', '23432', 'vxXxv', "Jason1-David2-Jason3-David4"], alignment=Alignment.CENTER, padding=2), "Words")
     table.add_coloumn(Widget(list("ABCDEFGHIJK"), padding=2), "Caps")
     table.add_coloumn(letters, "Letters")
     table.add_coloumn(Widget(["Super", "Cali", "Fragilistic"], alignment=Alignment.RIGHT, padding=2), "Magic")
@@ -47,7 +50,7 @@ def _main():
         os.system('cls' if os.name == 'nt' else 'clear')
         thump = [item * 2 for item in next(thumps)]
         spinner._items = thump
-        items = choices(list("abcX*defghijklmnopqrstuvwxyz"), k=1)
+        items = choice(list("abcX*defghijklmnopqrstuvwxyz"))
         letters._items.pop(0)
         letters._items.extend(items)
         window.render()
