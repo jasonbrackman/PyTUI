@@ -18,16 +18,16 @@ class Widget(Generic[T]):
         if items:
             self.extend(items)
 
-        self._header: Optional[T] = None
+        # self._header: Optional[T] = None
 
     def add(self, val: T) -> None:
-        max_len = len(val)
+        max_len = len(str(val))
         if max_len > self._width:
-            self._width = len(val)
+            self._width = max_len
         self._items.append(val)
 
     def extend(self, vals: list[T]) -> None:
-        max_len = max(len(v) for v in vals)
+        max_len = max(len(str(v)) for v in vals)
         if max_len > self._width:
             self._width = max_len
         self._items.extend(vals)
@@ -45,6 +45,13 @@ class Widget(Generic[T]):
         yield from (str(t)[:self.width()] for t in self._items)
 
     def width(self) -> int:
+        """
+        Returns width of the longest item as long as width_min < len(item) < width_max.
+        Else the width returned is:
+         - the width_min if less than the item width, or
+         - the width_max if greater.
+        """
+
         if self._width_max < self._width:
             return self._width_max
         if self._width_min > self._width:
@@ -58,4 +65,4 @@ class Widget(Generic[T]):
         align = alignment_as_str(self.alignment())
         width = self.width()
         pad = self.padding()
-        return [f"{str(item)[:width]:{align}{width + pad}}" for item in self.display_items()]
+        return [f"{str(item):{align}{width + pad}}" for item in self.display_items()]

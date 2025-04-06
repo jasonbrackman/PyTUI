@@ -2,7 +2,8 @@ import os
 import time
 from random import choice
 
-from src.elements import TableLayout, Window
+from src.window import Window
+from src.table_layout import TableLayout
 from src.widget import Widget
 from src.alignment import Alignment
 
@@ -31,6 +32,7 @@ def beats():
 
 def _main():
     table = TableLayout()
+
     letters = Widget(list("abcdefghijklmno"), padding=2)
     spinner = Widget(list("    "), alignment=Alignment.CENTER, padding=2)
     table.add_coloumn(spinner, '##')
