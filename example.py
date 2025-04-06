@@ -28,7 +28,8 @@ def beats():
     ]
     while True:
         for thump in thumpers:
-            yield thump
+
+            yield [item * 2 for item in thump]
 
 def _main():
     table = TableLayout()
@@ -48,13 +49,11 @@ def _main():
 
     thumps = beats()
     for _ in range(200):
-        # clear windows command screen
         os.system('cls' if os.name == 'nt' else 'clear')
-        thump = [item * 2 for item in next(thumps)]
-        spinner._items = thump
+        spinner.items = next(thumps)
         items = choice(list("abcX*defghijklmnopqrstuvwxyz"))
-        letters._items.pop(0)
-        letters._items.extend(items)
+        letters.extend([items])
+        letters.items = letters.items[1:]
         window.render()
         time.sleep(0.2)
 

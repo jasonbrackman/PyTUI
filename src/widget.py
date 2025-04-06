@@ -9,7 +9,9 @@ class Widget(Generic[T]):
                  padding: int = 0) -> None:
 
         self._alignment = alignment
+        self._height = 0
         self._padding = padding
+
         self._width: int = 0
         self._width_max: int = 20
         self._width_min: int = 0
@@ -20,17 +22,28 @@ class Widget(Generic[T]):
 
         # self._header: Optional[T] = None
 
+    @property
+    def items(self):
+        return self._items
+
+    @items.setter
+    def items(self, items:list[T]) -> None:
+        self._items = items
+        self._width = max((len(m) for m in self._items))
+
     def add(self, val: T) -> None:
         max_len = len(str(val))
         if max_len > self._width:
             self._width = max_len
         self._items.append(val)
+        self._height += 1
 
     def extend(self, vals: list[T]) -> None:
         max_len = max(len(str(v)) for v in vals)
         if max_len > self._width:
             self._width = max_len
         self._items.extend(vals)
+        self._height += len(vals)
 
     def alignment(self):
         return self._alignment
