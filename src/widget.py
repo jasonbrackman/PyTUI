@@ -1,14 +1,22 @@
-from typing import Generic, Optional, Iterator, TypeVar
+from typing import Generic, Optional, Iterator, TypeVar, Any, Generator
 
 from src.alignment import Alignment, alignment_as_str
+from src.colour import Colour
+from src.text import Text
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 class Widget(Generic[T]):
-    def __init__(self, items: Optional[list[T]] = None, alignment: Alignment = Alignment.LEFT,
-                 padding: int = 0) -> None:
+    def __init__(
+        self,
+        items: Optional[list[T]] = None,
+        alignment: Alignment = Alignment.LEFT,
+        padding: int = 0,
+    ) -> None:
 
         self._alignment = alignment
+        self._colour = Colour.CYAN
         self._height = 0
         self._padding = padding
 
@@ -20,16 +28,29 @@ class Widget(Generic[T]):
         if items:
             self.extend(items)
 
-        # self._header: Optional[T] = None
-
     @property
     def items(self):
         return self._items
 
     @items.setter
-    def items(self, items:list[T]) -> None:
+    def items(self, items: list[T]) -> None:
         self._items = items
-        self._width = max((len(m) for m in self._items))
+        self._width = max((len(str(m)) for m in self._items))
+        self._height = len(items)
+
+    def items_as_rows(self) -> Generator[list[list[Text]], Any, None]:
+        """
+        An iterator that returns the items at the max length specified.
+
+        If the items collectively have a mixed sized, but all fall within the min-max
+        range, they will display at the max size of any one of the entries.
+        """
+        for s in self._items:
+            txt = Text(s)
+            txt.width = self.width()
+            txt.pad = self.padding()
+            txt.align = self.alignment()
+            yield ([txt])
 
     def add(self, val: T) -> None:
         max_len = len(str(val))
@@ -39,23 +60,14 @@ class Widget(Generic[T]):
         self._height += 1
 
     def extend(self, vals: list[T]) -> None:
-        max_len = max(len(str(v)) for v in vals)
-        if max_len > self._width:
-            self._width = max_len
+        new_len = max(len(str(v)) for v in vals)
+        if new_len > self._width:
+            self._width = new_len
         self._items.extend(vals)
         self._height += len(vals)
 
     def alignment(self):
         return self._alignment
-
-    def display_items(self) -> Iterator[str]:
-        """
-        An iterator that returns the items at the max length specified.
-
-        If the items collectively have a mixed sized, but all fall within the min-max
-        range, they will display at the max size of any one of the entries.
-        """
-        yield from (str(t)[:self.width()] for t in self._items)
 
     def width(self) -> int:
         """
@@ -73,9 +85,3 @@ class Widget(Generic[T]):
 
     def padding(self) -> int:
         return self._padding
-
-    def render_lines(self) -> list[str]:
-        align = alignment_as_str(self.alignment())
-        width = self.width()
-        pad = self.padding()
-        return [f"{str(item):{align}{width + pad}}" for item in self.display_items()]

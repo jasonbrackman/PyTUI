@@ -1,11 +1,12 @@
 from itertools import zip_longest
-from typing import TypeVar, Iterator
+from typing import TypeVar, Iterator, Any, Generator
 
 from src.alignment import Alignment, alignment_as_str
 from src.constants import VLINE
+from src.text import Text
 from src.widget import Widget
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class LayoutImpl:
@@ -22,37 +23,24 @@ class LayoutImpl:
         self._items.append(widget)
         self._height = max(self._height, widget._height)
 
-    def collect_coloumn_data(self) -> tuple[
-        Iterator[list[T]], list[int], list[Alignment], list[int]]:
-        content = (w.display_items() for w in self._items)
-        widths = [w.width() for w in self._items]
-        aligns = [w.alignment() for w in self._items]
-        pads = [w.padding() for w in self._items]
+    def width(self) -> int:
+        return max(r.width() for r in self._items)
 
-        return content, widths, aligns, pads
+    def collect_rows(self) -> list[list[Text]]:
+        rows = (w.items_as_rows() for w in self._items)
+        widths: list[int] = [t.width() for t in self._items]
+        collection = []
 
-    def collect_rows(self, content, widths, aligns, pads) -> list[str]:
+        _fill = [Text("")]
 
-        rows = []
-        _fill = VLINE
-        for row in zip_longest(*content, fillvalue=''):
-            s = self._stylized_row(aligns, pads, widths, row, fill=_fill)
-            rows.append(f'{s:{alignment_as_str(self._alignment)}{self._padding + len(s)}}')
+        for row in zip_longest(*rows, fillvalue=_fill):
+            items = []
+            for cols, width in zip(row, widths):
+                # print(cols, type(cols))
+                for col in cols:
+                    # print(col)
+                    # col.width = width
+                    items.append(col)
+            collection.append(items)
 
-        return rows
-
-    def render_lines(self) -> list[str]:
-        content, widths, aligns, pads = self.collect_coloumn_data()
-        return self.collect_rows(content, widths, aligns, pads)
-
-    def _stylized_row(self, aligns: list[Alignment], pads: list[int], widths: list[int],
-                      row: list[str], fill: str = VLINE) -> str:
-        s = f'{fill}'.join(
-            [f"{item[:width]:{alignment_as_str(align)}{width + pad}}"
-             for align, pad, width, item in zip(aligns, pads, widths, row)]
-        )
-
-        return s
-
-    def display_items(self) -> None:
-        raise NotImplementedError
+        return collection
