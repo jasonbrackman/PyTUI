@@ -2,11 +2,10 @@ import os
 import time
 from random import choice
 
-from src.widget_audio import WidgetAudio
-from src.window import Window
-from src.table_layout import TableLayout
-from src.widget import Widget
-from src.alignment import Alignment
+from pytui.window import Window
+from pytui.layout import TableLayout
+from pytui.widget import Widget, WidgetAudio
+from pytui.alignment import Alignment
 
 
 def beats():
@@ -33,39 +32,41 @@ def beats():
 
 
 def _main():
+    header = Widget(["Example Display"], alignment=Alignment.CENTER, padding=0)
+    footer = Widget(["Example Footer"], alignment=Alignment.CENTER, padding=0)
+    letters = Widget(list("abcdefghijklmno"), alignment=Alignment.CENTER, padding=1)
+    spinner = WidgetAudio(list("    "), alignment=Alignment.CENTER, padding=1)
+    caps = Widget(list("ABCDEFGHIJK"), padding=1)
+    magic = Widget(
+        ["Super", "Cali", "Fragilistic"], alignment=Alignment.RIGHT, padding=1
+    )
+    list_01 = Widget(
+        [
+            "asdf",
+            "were",
+            "fizz",
+            "buzz",
+            "bang",
+            "23432",
+            "vxXxv",
+            "Jason1-David2-Jason3-David4",
+        ],
+        alignment=Alignment.CENTER,
+        padding=1,
+    )
+
     table = TableLayout()
 
-    letters = Widget(list("abcdefghijklmno"), padding=0)
-    spinner = WidgetAudio(list("    "), alignment=Alignment.CENTER, padding=0)
     table.add_coloumn(spinner, "##")
-    table.add_coloumn(
-        Widget(
-            [
-                "asdf",
-                "were",
-                "fizz",
-                "buzz",
-                "bang",
-                "23432",
-                "vxXxv",
-                "Jason1-David2-Jason3-David4",
-            ],
-            alignment=Alignment.CENTER,
-            padding=0,
-        ),
-        "Words",
-    )
-    table.add_coloumn(Widget(list("ABCDEFGHIJK"), padding=0), "Caps")
+    table.add_coloumn(list_01, "Words")
+    table.add_coloumn(caps, "Caps")
     table.add_coloumn(letters, "Letters")
-    table.add_coloumn(
-        Widget(["Super", "Cali", "Fragilistic"], alignment=Alignment.RIGHT, padding=0),
-        "Magic",
-    )
+    table.add_coloumn(magic, "Magic")
 
     window = Window()
-    window.add(Widget(list(["Example Display"]), alignment=Alignment.CENTER, padding=0))
+    window.add(header)
     window.add(table)
-    window.add(Widget(list(["Example Footer"]), alignment=Alignment.CENTER, padding=0))
+    window.add(footer)
 
     thumps = beats()
     for _ in range(100):

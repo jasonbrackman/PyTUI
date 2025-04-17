@@ -1,4 +1,4 @@
-from src.colour import Colour
+from src.pytui.colour import Colour
 
 UPPER_CORNER_LEFT = "┌"
 UPPER_CORNER_RIGHT = "┐"

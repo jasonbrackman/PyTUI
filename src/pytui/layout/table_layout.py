@@ -1,11 +1,11 @@
 from itertools import zip_longest, chain
-from typing import Iterator, Any, Generator
+from typing import Any, Generator
 
-from src.alignment import Alignment
-from src.colour import Colour
-from src.layout import LayoutImpl, T
-from src.widget import Widget
-from src.text import Text
+from src.pytui.alignment import Alignment
+from src.pytui.colour import Colour
+from src.pytui.layout import LayoutImpl
+from src.pytui.widget import Widget
+from src.pytui.text import Text
 
 
 class TableLayout(LayoutImpl):
@@ -21,6 +21,7 @@ class TableLayout(LayoutImpl):
 
     def items_as_rows(self) -> Generator[list[list[Text]], Any, None]:
         widths = [wid.width() for wid in self._items]
+        pads = [wid.padding() for wid in self._items]
         header_rows = self._headers.items_as_rows()
         if header_rows:
             headers = list(chain.from_iterable(header_rows))
@@ -30,6 +31,7 @@ class TableLayout(LayoutImpl):
                 #                         v         each one as its own widget.
                 col.width = widths[idx] = max(len(headers[idx]), widths[idx])
                 col.colour = Colour.WHITE_L
+                col.padding = pads[idx]
             yield [headers]
 
         combined_rows = []
@@ -43,9 +45,13 @@ class TableLayout(LayoutImpl):
                     final_list[idx] = Text("")
                     col = final_list[idx]
                 col.width = widths[idx]
+                col.padding = pads[idx]
 
             combined_rows.append(final_list)
         yield combined_rows
 
     def width(self):
         return sum(r.width() for r in self._items) + len(self._items) - 1
+
+    def padding(self):
+        return sum(r.padding() for r in self._items)

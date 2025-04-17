@@ -1,9 +1,9 @@
-from src.alignment import Alignment
-from src.colour import Colour
-from src.table_layout import TableLayout
-from src.text import Text
-from src.widget import Widget
-from src.window import Window
+from src.pytui.alignment import Alignment
+from src.pytui.colour import Colour
+from src.pytui.layout import TableLayout
+from src.pytui.text import Text
+from src.pytui.widget import Widget
+from src.pytui.window import Window
 
 
 def table_layout_example():
@@ -65,11 +65,11 @@ def text_example():
 
 def main():
     for func in (
-        # table_layout_example,
-        # widget_example,
+        table_layout_example,
+        widget_example,
         window_example,
         window2_example,
-        # text_example,
+        text_example,
     ):
         func()
         print("-" * 25)

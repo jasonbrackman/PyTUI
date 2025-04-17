@@ -1,5 +1,4 @@
-from src.colour import strip_ansi
-from src.constants import (
+from src.pytui.constants import (
     UPPER_CORNER_LEFT,
     HLINE,
     UPPER_CORNER_RIGHT,
@@ -9,7 +8,7 @@ from src.constants import (
     LOWER_CORNER_LEFT,
     LOWER_CORNER_RIGHT,
 )
-from src.layout import LayoutImpl
+from src.pytui.layout import LayoutImpl
 
 
 class Window(LayoutImpl):
@@ -26,8 +25,10 @@ class Window(LayoutImpl):
                         count += 1
                         continue
                     collection[count] = rows
-                    max_width = max(max_width, self.width())
-                    # print(max_width, self.width())
+                    max_width = max(
+                        max_width, self.width() + self.padding() + self.padding()
+                    )
+
                 count += 1
 
         # -------- Actual Rendering -----
@@ -45,16 +46,3 @@ class Window(LayoutImpl):
             if k < len(collection) - 1:
                 print(f"{JUNCTION_RIGHT}{HLINE * max_width}{JUNCTION_LEFT}")
         print(f"{LOWER_CORNER_LEFT}{HLINE * max_width}{LOWER_CORNER_RIGHT}")
-
-    def render2(self):
-        print("~" + ("=" * (self.width() + 3 - 1)) + "~")
-        for item in self._items:
-            for rows in item.items_as_rows():
-                for row in rows:
-                    if not row:
-                        continue
-                    try:
-                        print("|" + "|".join(str(c) for c in row) + "|")
-                    except TypeError as e:
-                        print("|" + "|".join(str(c) for c in rows) + "|")
-            print("~" + ("=" * (item.width() + 3 - 1)) + "~")

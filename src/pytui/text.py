@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from src.alignment import Alignment, alignment_as_str
-from src.colour import Colour, strip_ansi
+from src.pytui.alignment import Alignment, alignment_as_str
+from src.pytui.colour import Colour, strip_ansi
 
 
 @dataclass
@@ -41,11 +41,11 @@ class Text:
         self._align = align
 
     @property
-    def pad(self) -> int:
+    def padding(self) -> int:
         return self._pad
 
-    @pad.setter
-    def pad(self, pad: int) -> None:
+    @padding.setter
+    def padding(self, pad: int) -> None:
         self._pad = pad
 
     @property
@@ -63,7 +63,7 @@ class Text:
         r = 0 if self._col == Colour.DEFAULT_FG else 9
         a = alignment_as_str(self.align)
         p = self.paint(self._raw[: self.width])
-        return f"{p:{a}{self.width + self.pad + r}}"
+        return f"{' ' * self.padding}{p:{a}{self.width + r}}{' ' * self.padding}"
 
     def __repr__(self):
         return f'Text("{self._raw}")'

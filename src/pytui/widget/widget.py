@@ -1,8 +1,8 @@
-from typing import Generic, Optional, Iterator, TypeVar, Any, Generator
+from typing import Generic, Optional, TypeVar, Any, Generator
 
-from src.alignment import Alignment, alignment_as_str
-from src.colour import Colour
-from src.text import Text
+from src.pytui.alignment import Alignment
+from src.pytui.colour import Colour
+from src.pytui.text import Text
 
 T = TypeVar("T")
 
@@ -47,9 +47,9 @@ class Widget(Generic[T]):
         """
         for s in self._items:
             txt = Text(s)
-            txt.width = self.width()
-            txt.pad = self.padding()
-            txt.align = self.alignment()
+            txt.width = self._width
+            txt.padding = self._padding
+            txt.align = self._alignment
             yield ([txt])
 
     def add(self, val: T) -> None:
@@ -78,10 +78,10 @@ class Widget(Generic[T]):
         """
 
         if self._width_max < self._width:
-            return self._width_max
+            return self._width_max  # + self._padding
         if self._width_min > self._width:
-            return self._width_min
-        return self._width
+            return self._width_min  # + self._padding
+        return self._width  #  + self._padding
 
     def padding(self) -> int:
         return self._padding

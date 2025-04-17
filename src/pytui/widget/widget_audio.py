@@ -1,8 +1,8 @@
 from typing import Generator, Any
 
-from src.colour import Colour
-from src.text import Text
-from src.widget import Widget
+from src.pytui.colour import Colour
+from src.pytui.text import Text
+from src.pytui.widget import Widget
 
 
 class WidgetAudio(Widget):
@@ -18,8 +18,8 @@ class WidgetAudio(Widget):
 
         for idx, s in enumerate(self._items):
             txt = Text(s)
-            txt.width = self.width()
-            txt.pad = self.padding()
+            txt.width = self._width
+            txt.padding = self._padding
             txt.align = self.alignment()
             txt.colour = self.colour_choice(idx)
             yield [txt]
