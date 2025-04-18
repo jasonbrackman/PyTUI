@@ -1,8 +1,6 @@
 from typing import Generic, Optional, TypeVar, Any, Generator
 
-from src.pytui.alignment import Alignment
-from src.pytui.colour import Colour
-from src.pytui.text import Text
+from ..core import Alignment, Colour, Text
 
 T = TypeVar("T")
 
@@ -76,7 +74,6 @@ class Widget(Generic[T]):
          - the width_min if less than the item width, or
          - the width_max if greater.
         """
-
         if self._width_max < self._width:
             return self._width_max  # + self._padding
         if self._width_min > self._width:

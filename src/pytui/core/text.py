@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from src.pytui.alignment import Alignment, alignment_as_str
-from src.pytui.colour import Colour, strip_ansi
+from pytui.core.alignment import Alignment, alignment_as_str
+from pytui.core.colour import Colour, strip_ansi
 
 
 @dataclass

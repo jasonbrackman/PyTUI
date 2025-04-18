@@ -2,10 +2,9 @@ import os
 import time
 from random import choice
 
-from pytui.window import Window
 from pytui.layout import TableLayout
-from pytui.widget import Widget, WidgetAudio
-from pytui.alignment import Alignment
+from pytui.widget import Widget, WidgetAudio, Window
+from pytui.core import Alignment
 
 
 def beats():
@@ -69,7 +68,7 @@ def _main():
     window.add(footer)
 
     thumps = beats()
-    for _ in range(100):
+    for _ in range(1):
         os.system("cls" if os.name == "nt" else "clear")
         spinner.items = next(thumps)
         item = choice("abcX*defghijklmnopqrstuvwxyz")

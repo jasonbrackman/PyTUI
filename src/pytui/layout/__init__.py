@@ -1,4 +1,4 @@
-from .layout_impl import LayoutImpl
+from .layout import Layout
 from .table_layout import TableLayout
 
-__all__ = ["LayoutImpl", "TableLayout"]
+__all__ = ["Layout", "TableLayout"]

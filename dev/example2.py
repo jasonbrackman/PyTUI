@@ -1,9 +1,6 @@
-from src.pytui.alignment import Alignment
-from src.pytui.colour import Colour
-from src.pytui.layout import TableLayout
-from src.pytui.text import Text
-from src.pytui.widget import Widget
-from src.pytui.window import Window
+from pytui.core import Alignment, Colour, Text
+from pytui.layout import TableLayout
+from pytui.widget import Widget, Window
 
 
 def table_layout_example():
@@ -43,9 +40,15 @@ def window_example():
 
 def window2_example():
     example = Widget(["Title"], alignment=Alignment.CENTER, padding=0)
+    w1 = Widget(["Example Display", "asdf"], alignment=Alignment.CENTER, padding=0)
+    w2 = Widget(["one", "two", "three"])
     tbl = TableLayout()
-    tbl.add(Widget(["Example Display", "asdf"], alignment=Alignment.CENTER, padding=0))
-    tbl.add(Widget(["one", "two", "three"]))
+    tbl.add(w1)
+    tbl.add(w2)
+
+    # print(w1.width(), w1.padding())
+    # print(w2.width(), w2.padding())
+    # print(tbl.width(), tbl.padding())
 
     window = Window()
     window.add(example)

@@ -1,8 +1,7 @@
 from typing import Generator, Any
 
-from src.pytui.colour import Colour
-from src.pytui.text import Text
-from src.pytui.widget import Widget
+from ..core import Colour, Text
+from ..widget import Widget
 
 
 class WidgetAudio(Widget):

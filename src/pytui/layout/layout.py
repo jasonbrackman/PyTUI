@@ -1,24 +1,22 @@
 from itertools import zip_longest
 from typing import TypeVar
 
-from src.pytui.alignment import Alignment
-from src.pytui.text import Text
-from src.pytui.widget.widget import Widget
+from ..core import Alignment, Text
+# from ..widget import Widget
 
 T = TypeVar("T")
-LayoutType = TypeVar("LayoutType", bound="Impl")
 
-class LayoutImpl:
+class Layout:
     """Expected to be inherited by a customized Layout."""
 
     def __init__(self) -> None:
         self._alignment: Alignment = Alignment.CENTER
         self._padding: int = 0
-        self._items: list[LayoutType | Widget] = []
+        self._items = []
         self._height: int = 0
         self.display_headers: bool = False
 
-    def add(self, widget: [LayoutType, Widget]) -> None:
+    def add(self, widget) -> None:
         self._items.append(widget)
         self._height = max(self._height, widget._height)
 

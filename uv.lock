@@ -1,0 +1,18 @@
+version = 1
+revision = 1
+requires-python = ">=3.9"
+
+[[package]]
+name = "pytui"
+version = "0.1.0"
+source = { virtual = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytui" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytui", virtual = "." }]

@@ -1,0 +1,14 @@
+[project]
+name = "pytui"
+version = "0.1.0"
+description = "Text Based UI"
+requires-python = ">=3.9"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytui",
+]
+
+[tool.uv.sources]
+pytui = { workspace = true }

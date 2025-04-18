@@ -1,4 +1,4 @@
-from src.pytui.constants import (
+from ..constants import (
     UPPER_CORNER_LEFT,
     HLINE,
     UPPER_CORNER_RIGHT,
@@ -8,10 +8,9 @@ from src.pytui.constants import (
     LOWER_CORNER_LEFT,
     LOWER_CORNER_RIGHT,
 )
-from src.pytui.layout import LayoutImpl
+from .layout import Layout
 
-
-class Window(LayoutImpl):
+class Window(Layout):
     def render(self) -> None:
         count = 0
         collection = {}

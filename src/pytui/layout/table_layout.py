@@ -1,14 +1,12 @@
 from itertools import zip_longest, chain
 from typing import Any, Generator
 
-from src.pytui.alignment import Alignment
-from src.pytui.colour import Colour
-from src.pytui.layout import LayoutImpl
-from src.pytui.widget import Widget
-from src.pytui.text import Text
+from ..core import Alignment, Colour, Text
+from ..layout import Layout
+from ..widget import Widget
 
 
-class TableLayout(LayoutImpl):
+class TableLayout(Layout):
     def __init__(self) -> None:
         super().__init__()
         self._headers: Widget = Widget([], alignment=Alignment.CENTER)
