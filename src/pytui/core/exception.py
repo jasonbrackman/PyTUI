@@ -1,0 +1,3 @@
+
+class PyTuiException(Exception):
+    pass

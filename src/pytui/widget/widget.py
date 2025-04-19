@@ -44,7 +44,7 @@ class Widget(Generic[T]):
         range, they will display at the max size of any one of the entries.
         """
         for s in self._items:
-            txt = Text(s)
+            txt = Text(str(s))
             txt.width = self._width
             txt.padding = self._padding
             txt.align = self._alignment

@@ -1,4 +1,6 @@
-from .alignment import Alignment
-from .colour import Colour
+from .alignment import Alignment, alignment_as_str
+from .colour import Colour, strip_ansi
 from .text import Text
-__all__ = ["Alignment", "Colour", "Text"]
+from .exception import PyTuiException
+__all__ = ["Alignment", "Colour", "Text", "PyTuiException",
+           "alignment_as_str", ]

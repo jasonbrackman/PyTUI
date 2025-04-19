@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 
-from pytui.core.alignment import Alignment, alignment_as_str
-from pytui.core.colour import Colour, strip_ansi
-
+from . import Alignment, alignment_as_str, Colour, strip_ansi
+from .exception import PyTuiException
 
 @dataclass
 class Text:
     def __init__(self, s: str, colour: Colour = Colour.DEFAULT_FG) -> None:
+        if isinstance(s, str) is False:
+            raise PyTuiException("Text object only excepts a string.")
         self._ori = s
         self._raw = strip_ansi(s)
         self._raw_len: int = len(self._raw)
